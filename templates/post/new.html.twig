@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% block title %}Eintrag erstellen{% endblock %}
+
+{% block body %}
+  <h2>Erstelle einen Blog Post</h2>
+  {{form_start(form)}}
+  {{form_widget(form)}}
+  <button class="btn btn-success mt-5">Erstellen</button>
+  {{form_end(form)}}
+{% endblock %}

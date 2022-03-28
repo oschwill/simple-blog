@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% form_theme commentForm 'bootstrap_4_layout.html.twig' %}
+{% block title %}Zeige Eintrag{% endblock %}
+
+{% block body %}
+
+{% for message in app.flashes('edit_post_success') %}
+	<div class="alert alert-success mt-5 text-center" role="alert">
+		{{ message }}
+	</div>
+{% endfor %}
+
+  <section class="post">
+    <article>
+      <h2>{{ post.title }}</h2>
+      <div class="metadata">
+        {{ post.createdAt|date('d-m-Y') }} um {{ post.createdAt|date('H:i') }} Uhr von John
+        <span class="badge bg-success">{{ post.category.title }}</span>        
+      </div>
+      <div class="content">
+        {% if post.imageName %}
+          <img src="{{ vich_uploader_asset(post, 'imageFile')}}" width="300" height="200" alt="" class="mt-3 mb-3" >
+          {% else %}
+          <img src="https://picsum.photos/seed/picsum/300/200" alt="" class="mt-3 mb-3">
+        {% endif %}
+        <p>{{ post.content }}</p>
+        {% if app.user and app.user == post.author %}
+        <a href="{{ path('post_edit', { 'id': post.id }) }}">bearbeiten</a>
+        {% endif %}
+      </div>
+    </article>
+  </section>
+
+  {% for message in app.flashes('new_comment_success') %}
+    <div class="alert alert-success mt-5 text-center" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
+
+  <h2 class="mt-5">{{ post.comments|length }} {{ post.comments|length <= 1 ? 'Kommentar' : 'Kommentare' }}</h2>
+  <section class="mt-5">
+    {% for comment in post.comments %}
+    <div class="card-header">
+      {{ comment.author }}, <small>{{ comment.createdAt|date('d-m-Y') }} um {{ comment.createdAt|date('H:i') }}</small>
+    </div>
+    <div class="card-body">
+      <p>{{ comment.content }}</p>
+    </div>
+    {% endfor %}
+  </section>
+  <hr>
+  <h2>Kommentar hinzufügen</h2>
+  {{form_start(commentForm)}}
+  {{form_widget(commentForm)}}
+  <button class="btn btn-success mt-5">Erstellen</button>
+  {{form_end(commentForm)}}
+
+{% endblock %}

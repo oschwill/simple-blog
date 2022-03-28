@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block body %}
+{% for message in app.flashes('new_post_success') %}
+	<div class="alert alert-success mt-5 text-center" role="alert">
+		{{ message }}
+	</div>
+{% endfor %}
+
+    {% for post in posts %}
+    <section class="posts">
+        <article>
+            <h2>{{ post.title }}</h2>
+            <div class="metadata">                
+                {{ post.createdAt|date('d-m-Y') }} um {{ post.createdAt|date('H:i') }} Uhr von 
+                {% if post.author %}
+                {{ post.author.firstName }}
+                {% else %}
+                user
+                {% endif %}
+                <span class="badge bg-success">{{ post.category.title }}</span>
+                {{ post.comments|length }} {{ post.comments|length <= 1 ? 'Kommentar' : 'Kommentare' }}
+            </div>
+            <div class="content">
+
+                {% if post.imageName %}
+                <img src="{{ vich_uploader_asset(post, 'imageFile')}}" width="300" height="200" alt="" class="mt-3 mb-3" >
+                {% else %}
+                <img src="https://picsum.photos/seed/picsum/300/200" alt="" class="mt-3 mb-3">
+                {% endif %}
+
+                    <p>{{ post.content }}</p>
+                    <a href="{{ path('post_show', { 'id': post.id }) }}">Mehr Lesen</a>
+            </div>
+        </article>    
+    </section>
+    {% endfor %}
+    <div class="navigation">
+        {{ knp_pagination_render(posts) }}
+    </div>
+{% endblock %}
